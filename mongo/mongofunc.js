@@ -1,0 +1,69 @@
+var assert = require('assert');
+var mdb = new Object();
+
+mdb.insertDocument = function(db, callback) {
+   db.collection('restaurants').insertOne( {
+      "address" : {
+         "street" : "2 Avenue",
+         "zipcode" : "10075",
+         "building" : "1480",
+         "coord" : [ -73.9557413, 40.7720266 ]
+      },
+      "borough" : "Manhattan",
+      "cuisine" : "Italian",
+      "grades" : [
+         {
+            "date" : new Date("2014-10-01T00:00:00Z"),
+            "grade" : "A",
+            "score" : 11
+         },
+         {
+            "date" : new Date("2014-01-16T00:00:00Z"),
+            "grade" : "B",
+            "score" : 17
+         }
+      ],
+      "name" : "Vella",
+      "restaurant_id" : "41704620"
+   }, function(err, result) {
+    assert.equal(err, null);
+    console.log("Inserted a document into the restaurants collection.");
+    callback();
+  });
+};
+
+mdb.findRestaurants = function(db, callback) {
+   var cursor = db.collection('restaurants').find( { "name": "Vella" } ); //{ %gt: 10 } (greater than 10)
+   cursor.each(function(err, doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+         console.dir(doc);
+      } else {
+         callback();
+      }
+   });
+};
+
+mdb.findMessages = function(db, callback) {
+   var cursor = db.collection('messages').find();
+   cursor.each(function(err,doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+         console.dir(doc);
+      } else {
+         callback();
+      }
+   });
+};
+
+mdb.addMessage = function(msg, db, callback) {
+   db.collection("messages").insertOne( {
+      "message": msg
+   }, function(err,result){
+      assert.equal(err, null);
+      console.log("Message inserted into the message collection.");
+      callback();
+   });
+};
+
+module.exports = mdb;

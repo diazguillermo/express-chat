@@ -37,28 +37,18 @@
             return false;
          });
 
-         // socket.on('connect', function() {
-         //    $('#messages').append($('<li>').text("A user is ready to chat."));
-         //    users += 1;
-         //    $("p").text("Users Online: " + users);
-         // })
-         //
-         // socket.on('reconnect', function() {
-         //    $('#messages').append($('<li>').text("A user has reconnected."));
-         // });
-
-         //---------------------------TONE.JS--------------------------------
-
-
-
 
          socket.on('chat message', function(msg){
             $('#messages').append($('<li>').text(msg));
 
+            var synth = new Tone.SimpleSynth().toMaster();
+            synth.triggerAttackRelease("C6", 0.1);
+            // synth.triggerAttackRelease("C4", 0.1, 0.1);
+
             // var seq = new Tone.Sequence(function(time, note){
          	// console.log(note);
-            // //straight quater notes
-            // }, ["C4", "E4", "G4", "A4"], "4n");
+            // straight quater notes
+            // }, ["C4", "E4", "G4", "A4"], "4n").start();
 
             // var chord = new Tone.Event(function(time, chord){
          	// //the chord as well as the exact time of the event
@@ -76,7 +66,7 @@
             // osc.connect(env);
             // env.toMaster();
             // osc.start();
-            // env.triggerAttack();
+            // env.triggerAttackRelease(3, 3);
          });
 
          socket.on('users', function(users){
@@ -89,7 +79,13 @@
          // });
          // window.onload = function(){ prompt("Enter a nickname for yourself: "))}; ---Without jQuery, seems to be very slow
          });
+
+
       </script>
+      <!-- <script type="text/javascript">
+      var synth = new Tone.SimpleSynth().toMaster();
+      synth.triggerAttackRelease("C4", "8n");
+      </script> -->
        <!-- <div id = "users" style = "position: absolute; bottom: 50px; right: 10px; text-align: right;">Users : </div> -->
    </body>
 </html>
