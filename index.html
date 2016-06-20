@@ -55,6 +55,9 @@
          socket.on('chat message', function(msg){
             $('#messages').append($('<li>').text(msg));
 
+            var synth = new Tone.SimpleSynth().toMaster();
+            synth.triggerAttackRelease("C6", 0.1);
+
             // var seq = new Tone.Sequence(function(time, note){
          	// console.log(note);
             // //straight quater notes
