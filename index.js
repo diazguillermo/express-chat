@@ -11,6 +11,7 @@ var url = 'mongodb://localhost:27017/test';
 // var methodOverride = require('method-override');
 // var routes = require('./routes/index');
 // var users = require('./routes/users');
+
 var users = 0;
 
 var insertDocument = function(db, callback) {
@@ -102,14 +103,16 @@ io.on('connection', function (socket){
    console.log("# of users: " + users);
    io.emit('users', users);
    socket.broadcast.emit('chat message', "A user is ready to chat.");
+
    socket.on('disconnect', function() {
       console.log('user disconnected');
       users--;
       io.emit('users', users);
+      socket.broadcast.emit('chat message', "A user has disconnected.");
    });
 
    socket.on('chat message', function (msg){
-      io.emit('chat message', "User " + socket.id + ": " + msg);
+      io.emit('chat message', "User " + "socket.id" + ": " + msg);
       // MongoClient.connect(url, function(err, db) {
       //    assert.equal(null, err)
       //    addMessage(msg, db, function(){
@@ -119,7 +122,7 @@ io.on('connection', function (socket){
    });
 });
 
-http.listen(process.env.PORT || 5000, function(){
+http.listen(process.env.PORT || 3000, function(){
    console.log('listening on *:3000');
    console.log("# of users: " + users);
 });
