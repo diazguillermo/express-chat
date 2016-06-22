@@ -14,40 +14,40 @@ var isAuthenticated = function (req, res, next) {
 module.exports = function(passport){
 
   /* GET login page. */
-  app.get('/', function(req, res) {
+  router.get('/', function(req, res) {
     // Display the Login page with any flash message, if any
-    res.render('index.jade', { message: req.flash('message') });
+    res.sendFile(__dirname + '/routes/start.html', { message: req.flash('message') });
   });
 
   /* Handle Login POST */
-  app.post('/login', passport.authenticate('login', {
+  router.post('/login', passport.authenticate('login', {
     successRedirect: '/home',
     failureRedirect: '/',
     failureFlash : true
   }));
 
   /* GET Registration Page */
-  app.get('/signup', function(req, res){
+  router.get('/signup', function(req, res){
     res.sendFile(__dirname + '/routes/register.html',{message: req.flash('message')});
   });
 
   /* Handle Registration POST */
-  app.post('/signup', passport.authenticate('signup', {
+  router.post('/signup', passport.authenticate('signup', {
     successRedirect: '/home',
     failureRedirect: '/signup',
     failureFlash : true
   }));
 
   /* GET Home Page */
-	app.get('/home', isAuthenticated, function(req, res){
+	router.get('/home', isAuthenticated, function(req, res){
 		res.sendFile(__dirname + '/routes/index.html', { user: req.user });
 	});
 
 	/* Handle Logout */
-	app.get('/signout', function(req, res) {
+	router.get('/signout', function(req, res) {
 		req.logout();
 		res.redirect('/');
 	});
 
-  return app;
-};
+	return router;
+}

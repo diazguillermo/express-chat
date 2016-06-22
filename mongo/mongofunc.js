@@ -56,9 +56,10 @@ mdb.findMessages = function(db, callback) {
    });
 };
 
-mdb.addMessage = function(msg, db, callback) {
+mdb.addMessage = function(msg, sender, db, callback) {
    db.collection("messages").insertOne( {
-      "message": msg
+      "message": msg,
+      "sender": sender
    }, function(err,result){
       assert.equal(err, null);
       console.log("Message inserted into the message collection.");
