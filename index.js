@@ -19,6 +19,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passportSocketIo = require('passport.socketio');
 
+var users = 0;
+
 var sessionStore = new MongoStore({ mongooseConnection: mongoose.connection });
 
 var sessionMiddleware = expressSession({
@@ -27,7 +29,6 @@ var sessionMiddleware = expressSession({
 	saveUninitialized: false,
 	secret: "secretKey",
 });
-var users = 0;
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -45,12 +46,6 @@ app.use(flash()); // Using the flash middleware provided by connect-flash to sto
 
 var initPassport = require('./server/init');
 initPassport(passport);
-
-app.use('/public', express.static(__dirname + '/public'));
-
-var routes = require('./routes/index.js')(passport);
-app.use('/routes', routes);
-
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler
@@ -88,7 +83,6 @@ app.post('/signup', passport.authenticate('signup', {
  failureFlash : true
 }));
 
-var tempUser = "";
 /* GET Home Page */
 app.get('/home', isAuthenticated, function(req, res){
 	res.sendFile(__dirname + '/routes/index.html', { user: req.user });
@@ -129,6 +123,7 @@ io.on('connection', function (socket){
       users--;
 		console.log("# of users: " + users);
       io.emit('users', users);
+      socket.broadcast.emit('chat message', "A user has disconnected.");
    });
 
    socket.on('chat message', function (msg){
@@ -139,8 +134,10 @@ io.on('connection', function (socket){
          mongo.addMessage(msg, userId, db, function(){
             db.close();
          });
+
       });
    });
+
 });
 
 http.listen(process.env.PORT || 3000, function(){

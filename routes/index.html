@@ -26,8 +26,8 @@
       <form action="">
          <input id="m" autocomplete="off" /><button>Send</button>
       </form>
-      <!-- <script src="http://cdn.socket.io/stable/socket.io.js"></script> -->
-      <script src="/socket.io/socket.io.js"></script>
+      <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+      <!-- <script src="/socket.io/socket.io.js"></script> -->
       <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
       <script>
          var socket = io();
@@ -44,7 +44,6 @@
             var synth = new Tone.SimpleSynth().toMaster();
             synth.triggerAttackRelease("C6", 0.1);
             // synth.triggerAttackRelease("C4", 0.1, 0.1);
-
             // var seq = new Tone.Sequence(function(time, note){
          	// console.log(note);
             // straight quater notes
