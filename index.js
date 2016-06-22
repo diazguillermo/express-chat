@@ -44,6 +44,8 @@ app.use(passport.session());
 app.use(flash()); // Using the flash middleware provided by connect-flash to store messages in session
 // and displaying in templates
 
+app.use("/routes", express.static(__dirname + "/routes"));
+
 var initPassport = require('./server/init');
 initPassport(passport);
 
