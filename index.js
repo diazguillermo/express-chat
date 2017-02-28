@@ -65,8 +65,8 @@ var isAuthenticated = function (req, res, next) {
 app.get('/', function(req, res) {
  // Display the Login page with any flash message, if any
  // ***uncomment below to set up passport***
- res.sendFile(__dirname + '/routes/start.html', { message: req.flash('message') });
- // res.sendFile(__dirname + '/routes/index.html', { user: req.user });
+ // res.sendFile(__dirname + '/routes/start.html', { message: req.flash('message') });
+ res.sendFile(__dirname + '/routes/index.html');
 });
 
 /* Handle Login POST */
