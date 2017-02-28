@@ -21,14 +21,14 @@ var passportSocketIo = require('passport.socketio');
 
 var users = 0;
 
-var sessionStore = new MongoStore({ mongooseConnection: mongoose.connection });
+// var sessionStore = new MongoStore({ mongooseConnection: mongoose.connection });
 
-var sessionMiddleware = expressSession({
-	store: sessionStore,
-	resave: false,
-	saveUninitialized: false,
-	secret: "secretKey",
-});
+// var sessionMiddleware = expressSession({
+// 	store: sessionStore,
+// 	resave: false,
+// 	saveUninitialized: false,
+// 	secret: "secretKey",
+// });
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -37,8 +37,9 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use("/node_modules", express.static(__dirname + '/node_modules'));
 
-mongoose.connect(dbConfig.url);
-app.use(sessionMiddleware);
+// uncomment for mongodb
+// mongoose.connect(dbConfig.url);
+// app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); // Using the flash middleware provided by connect-flash to store messages in session
@@ -63,7 +64,9 @@ var isAuthenticated = function (req, res, next) {
 /* GET login page. */
 app.get('/', function(req, res) {
  // Display the Login page with any flash message, if any
+ // ***uncomment below to set up passport***
  res.sendFile(__dirname + '/routes/start.html', { message: req.flash('message') });
+ // res.sendFile(__dirname + '/routes/index.html', { user: req.user });
 });
 
 /* Handle Login POST */
@@ -104,16 +107,17 @@ app.get('/signout', function(req, res) {
 // });
 
 
-io.use(passportSocketIo.authorize({
-	store: sessionStore,
-	key: 'connect.sid',
-	secret: "secretKey",
-	passport: passport,
-	cookieParser: cookieParser
-}));
+// io.use(passportSocketIo.authorize({
+// 	store: sessionStore,
+// 	key: 'connect.sid',
+// 	secret: "secretKey",
+// 	passport: passport,
+// 	cookieParser: cookieParser
+// }));
 
 io.on('connection', function (socket){
-	var userId = socket.request.user.username;
+	var userId = "exampleName";
+	// var userId = socket.request.user.username;
    console.log('a user connected');
    users++;
    console.log("# of users: " + users);
@@ -123,7 +127,7 @@ io.on('connection', function (socket){
    socket.on('disconnect', function() {
       console.log('user disconnected');
       users--;
-		console.log("# of users: " + users);
+			console.log("# of users: " + users);
       io.emit('users', users);
       socket.broadcast.emit('chat message', "A user has disconnected.");
    });
@@ -131,14 +135,15 @@ io.on('connection', function (socket){
    socket.on('chat message', function (msg){
 		io.emit('chat message', "User " + userId + ": " + msg);
 
-      MongoClient.connect(url, function(err, db) {
-         assert.equal(null, err)
-         mongo.addMessage(msg, userId, db, function(){
-            db.close();
-         });
+			// uncomment to reenable mongo
+      // MongoClient.connect(url, function(err, db) {
+      //    assert.equal(null, err)
+      //    mongo.addMessage(msg, userId, db, function(){
+      //       db.close();
+        //  });
 
       });
-   });
+  //  });
 
 });
 
